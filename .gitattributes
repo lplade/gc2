@@ -1,0 +1,7 @@
+# Don't give us credit for bootstrap files
+gutencloud/static/css/bootstrap* linguist-vendored
+gutencloud/static/js/bootstrap* linguist-vendored
+gutencloud/static/js/npm.js linguist-vendored
+gutencloud/static/fonts/glyphicons* linguist-vendored
+gutencloud/static/locales/bootstrap* linguist-vendored
+
