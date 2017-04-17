@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request, redirect
 import logging
 
 # Sets the verbosity of console logging
@@ -16,6 +16,19 @@ app = Flask(__name__)
 def index():
     return render_template("main.html")
 
+
+@app.route('/pgsearch', methods=["POST"])
+def pg_search():
+    if request.method == "POST":
+        # TODO parse the form
+        # TODO do some stuff with that
+        # TODO process output from that
+
+        # TODO render a thing
+        pass
+    else:
+        # We should not access this route by GET
+        return redirect("/", code=302)
 
 # Leave this as the last route
 @app.route("/<path:path>")
