@@ -1,11 +1,17 @@
-from flask import Flask, render_template, request, redirect
+# Note that the main Flask imports are in orm.py
+from .orm import *
+from flask import render_template, request, redirect
 import logging
 
 # Sets the verbosity of console logging
 logging.basicConfig(level=logging.DEBUG)
 
-# Any needed Flask configuration can be passed as arguments to this
-app = Flask(__name__)
+# tell flask where folders are
+base_dir = os.path.abspath(os.path.dirname(__file__))
+template_dir = os.path.join(base_dir, 'templates')
+static_dir = os.path.join(base_dir, 'static')
+
+app = Flask(__name__, template_folder=template_dir, static_folder=static_dir)
 
 
 #########
@@ -29,6 +35,7 @@ def pg_search():
     else:
         # We should not access this route by GET
         return redirect("/", code=302)
+
 
 # Leave this as the last route
 @app.route("/<path:path>")

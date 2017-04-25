@@ -1,5 +1,6 @@
 # Enhanced from
 # https://gist.github.com/andreasvc/b3b4189120d84dec8857
+# -lpl
 """Extract metadata from Project Gutenberg RDF catalog into a Python dict.
 
 Based on https://bitbucket.org/c-w/gutenberg/
@@ -86,14 +87,16 @@ def read_metadata():
     if os.path.exists(PICKLE_FILE):
         metadata = pickle.load(gzip.open(PICKLE_FILE, 'rb'))
     else:
-        metadata = {}
+        # metadata = {}
+        metadata = []
         for xml in get_rdf_data():
             ebook = xml.find(r'{%(pg)s}ebook' % NS)
             if ebook is None:
                 continue
             result = parse_metadata(ebook)
             if result is not None:
-                metadata[result['id']] = result
+                # metadata[result['id']] = result
+                metadata.append(result)
         pickle.dump(metadata, gzip.open(PICKLE_FILE, 'wb'), protocol=-1)
     return metadata
 
