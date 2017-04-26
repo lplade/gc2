@@ -1,6 +1,7 @@
 # Enhanced from
 # https://gist.github.com/andreasvc/b3b4189120d84dec8857
 # -lpl
+
 """Extract metadata from Project Gutenberg RDF catalog into a Python dict.
 
 Based on https://bitbucket.org/c-w/gutenberg/

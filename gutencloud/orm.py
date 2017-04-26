@@ -42,7 +42,7 @@ class Ebook(db.Model):
     # should be their own tables/objects
 
     ebook_id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(256))
+    title = db.Column(db.String(256), nullable=False)
     author = db.Column(db.String(256))
     author_year_of_birth = db.Column(db.Integer)
     author_year_of_death = db.Column(db.Integer)
@@ -52,13 +52,31 @@ class Ebook(db.Model):
     formats = db.Column(db.PickleType)
     # language is a list of ISO codes
     languages = db.Column(db.PickleType)
-    # subjects is a dict
+    # subjects is a set of strings?
     subjects = db.Column(db.PickleType)
+    # lcc is a list of two-letter codes (set?)
+    lcc = db.Column(db.PickleType)
 
-    def __init__(self, ebook_id, title, **kwargs):
-        self.ebook_id = ebook_id
+    def __init__(self, id, title, *,
+                 # First two are required to construct
+                 # Rest can be passed as kwargs from dict
+                 author=None,
+                 authoryearofbirth=None,
+                 authoryearofdeath=None,
+                 downloads=None, formats=None,
+                 language=None, subjects=None,
+                 type=None, LCC=None):
+        self.ebook_id = id
         self.title = title
-        # TODO parse kwargs
+        self.author = author
+        self.author_year_of_birth = authoryearofbirth
+        self.author_year_of_death = authoryearofdeath
+        self.downloads = downloads
+        self.formats = formats
+        self.languages = language
+        self.subjects = subjects
+        self.type = type
+        self.lcc = LCC
 
     def __repr__(self):
         return '{}: {} by {} ({}-{})'.format(
