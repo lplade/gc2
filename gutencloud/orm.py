@@ -5,22 +5,33 @@ import pprint
 
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-import datetime
-
-basedir = os.path.abspath(os.path.dirname(__file__))
-SQLALCHEMY_DATATBASE_URI = 'sqlite:///' + os.path.join(basedir, 'gutenberg.db')
-
-app = Flask(__name__)
-
-app.config['SQLALCHEMY_DATABASE_URI'] = SQLALCHEMY_DATATBASE_URI
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False  # Squelch warnings
-db = SQLAlchemy(app)
 
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
-MIME_UTF8 = 'text/plain'
-MIME_ASCII = 'text/plain: charset=us-ascii'
+# sqlite is TOO SLOW for this
+# basedir = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
+# SQLALCHEMY_DATATBASE_URI = 'sqlite:///' + os.path.join(basedir, 'local_data', 'gutenberg.db')
+# logger.info('Database at %s', SQLALCHEMY_DATATBASE_URI)
+
+MYSQL_USER = os.environ['GC_MYSQL_USER']
+MYSQL_PASSWORD = os.environ['GC_MYSQL_PASSWORD']
+
+# Use utf8mb4 option to deal with a handful of i18n strings that show up
+SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://{}:{}@localhost/gutencloud?charset=utf8mb4'.format(MYSQL_USER, MYSQL_PASSWORD)
+
+app = Flask(__name__)
+
+app.config['SQLALCHEMY_DATABASE_URI'] = SQLALCHEMY_DATABASE_URI
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False  # Squelch warnings
+db = SQLAlchemy(app)
+
+MIME_TXT = 'text/plain'
+MIME_UTF8 = 'text/plain; charset=utf-8'
+MIME_ISO = 'text/plain; charset=iso-8859-1'
+MIME_ASCII = 'text/plain; charset=us-ascii'
+MIME_ZIP = 'application/zip'
+
 
 class Ebook(db.Model):
     """
@@ -51,17 +62,21 @@ The dict we pass into this looks like:
     # should be their own tables/objects
 
     ebook_id = db.Column(db.Integer, primary_key=True, autoincrement=False)
-    title = db.Column(db.String(256), nullable=False)
-    author = db.Column(db.String(256))
+    # 191 characters is limit for InnoDB using utf8mb4
+    title = db.Column(db.Text, nullable=False)
+    author = db.Column(db.Text)
     author_year_of_birth = db.Column(db.Integer)
     author_year_of_death = db.Column(db.Integer)
     downloads = db.Column(db.Integer)
-    type = db.Column(db.String(64))  # 'Text'
+    # type = db.Column(db.String(64))  # 'Text'
 
     # Formats is a dict
     # We only need the text/plain key
-    plaintext_url = db.Column(db.String(512))
-    plaintext_filename = db.Column(db.String(256))
+    plaintext_url = db.Column(db.Text)
+    plaintext_filename = db.Column(db.String(191))
+
+    # This is the actual url we are permitted to download from
+    robot_url = db.Column(db.Text)
 
     # language is a list of ISO codes
     # We are already filtering for 'en'
@@ -82,10 +97,10 @@ The dict we pass into this looks like:
                  authoryearofbirth=None,
                  authoryearofdeath=None,
                  downloads=None, formats=None,
-                 # language=None,
-                 # subjects=None,
-                 type=None     # Let's test for 'Text' before we create object and not store this
-                 # LCC=None
+                 language=None,
+                 subjects=None,
+                 type=None,     # Let's test for 'Text' before we create object and not store this
+                 LCC=None
                  ):
         self.ebook_id = id
         self.title = title
@@ -99,28 +114,51 @@ The dict we pass into this looks like:
         assert type == 'Text'
         # self.lcc = LCC
 
+        self.robot_url = None  # Set after initialization
+
         # Prefer to get UTF-8 version, fall back to ASCII if needed
-        if MIME_UTF8 in formats:
+        if MIME_TXT in formats:
+            self.plaintext_url = formats[MIME_TXT]
+            self.plaintext_filename = self.plaintext_url.rsplit('/', 1)[-1]
+        elif MIME_UTF8 in formats:
             self.plaintext_url = formats[MIME_UTF8]
+            self.plaintext_filename = self.plaintext_url.rsplit('/', 1)[-1]
+        elif MIME_ISO in formats:
+            self.plaintext_url = formats[MIME_ISO]
             self.plaintext_filename = self.plaintext_url.rsplit('/', 1)[-1]
         elif MIME_ASCII in formats:
             self.plaintext_url = formats[MIME_ASCII]
             self.plaintext_filename = self.plaintext_url.rsplit('/', 1)[-1]
+        elif MIME_ZIP in formats:
+            self.plaintext_url = formats[MIME_ZIP]
+            self.plaintext_filename = self.plaintext_url.rsplit('/', 1)[-1]
         else:
-            logger.warning("Can't find a plaintext version for ebook %d %s", self.ebook_id, self.title)
-            logger.warning("Available formats:")
-            logger.warning(pprint.pformat(formats))
+            # logger.debug("Can't find a plaintext version for ebook %d %s", self.ebook_id, self.title)
+            # logger.debug("Available formats: \n" + pprint.pformat(formats))
             self.plaintext_url = None
             self.plaintext_filename = None
-            # TODO throw error or something?
 
     def __repr__(self):
-        return '{}: {} by {} ({}-{})'.format(
-            self.ebook_id,
-            self.title,
-            self.author,
-            self.author_year_of_birth,
-            self.author_year_of_death
-        )
+        if self.author is not None:
+            if self.author_year_of_birth is not None:
+                repr_string = '{}: {} by {} ({}-{})'.format(
+                    self.ebook_id,
+                    self.title,
+                    self.author,
+                    self.author_year_of_birth,
+                    self.author_year_of_death  # We're fine if this is None
+                )
+            else:
+                repr_string = '{}: {} by {}'.format(
+                    self.ebook_id,
+                    self.title,
+                    self.author
+                )
+        else:
+            repr_string = '{}: {}'.format(
+                self.ebook_id,
+                self.title
+            )
+        return repr_string
 
 

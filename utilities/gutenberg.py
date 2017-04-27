@@ -1,7 +1,8 @@
 # Enhanced from
 # https://gist.github.com/andreasvc/b3b4189120d84dec8857
+# Parsing this XML-RDF data is... tricky
+# TODO re-write this thing to only return the data we need
 # -lpl
-
 """Extract metadata from Project Gutenberg RDF catalog into a Python dict.
 
 Based on https://bitbucket.org/c-w/gutenberg/
@@ -90,6 +91,7 @@ def read_metadata():
     else:
         # metadata = {}
         metadata = []
+        # TODO we should trap for EOFError in case cached file is corrupt -lpl
         for xml in get_rdf_data():
             ebook = xml.find(r'{%(pg)s}ebook' % NS)
             if ebook is None:
