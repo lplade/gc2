@@ -40,11 +40,10 @@ import tarfile
 import urllib.request
 import xml.etree.cElementTree as ElementTree
 import pickle
-import tempfile
 
-
-PICKLE_FILE = os.path.join(tempfile.gettempdir(), 'md.pickle.gz')  # The Python dict produced by this module
-RDF_FILES = os.path.join(tempfile.gettempdir(), 'rdf-files.tar.bz2')  # The catalog downloaded from Gutenberg
+BASEDIR = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
+PICKLE_FILE = os.path.join(BASEDIR, 'local_data', 'md.pickle.gz')  # The Python dict produced by this module
+RDF_FILES = os.path.join(BASEDIR, 'local_data', 'rdf-files.tar.bz2')  # The catalog downloaded from Gutenberg
 RDF_URL = 'http://www.gutenberg.org/cache/epub/feeds/rdf-files.tar.bz2'
 META_FIELDS = ('id', 'author', 'title', 'downloads', 'formats', 'type', 'LCC',
                'subjects', 'authoryearofbirth', 'authoryearofdeath', 'language')

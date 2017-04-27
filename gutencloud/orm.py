@@ -116,6 +116,8 @@ The dict we pass into this looks like:
 
         self.robot_url = None  # Set after initialization
 
+        # TODO store ALL of the below, and filenames
+
         # Prefer to get UTF-8 version, fall back to ASCII if needed
         if MIME_TXT in formats:
             self.plaintext_url = formats[MIME_TXT]

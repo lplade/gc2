@@ -12,14 +12,15 @@ import gzip
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
-PICKLE_FILE = os.path.join(tempfile.gettempdir(), 'robot.pickle.gz')
+BASEDIR = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
+PICKLE_FILE = os.path.join(BASEDIR, 'local_data', 'robot.pickle.gz')
 
 # Note that the Flask imports and database setup is in orm.py
 
 
 def main():
-    create_destroy_db()
-    fetch_parse_metadata()
+    # create_destroy_db()
+    # fetch_parse_metadata()
     link_dict = spider_urls()
     match_urls(link_dict)
 
@@ -94,11 +95,14 @@ def spider_urls():
 def match_urls(link_dict):
     logger.info('Matching robot URLs to etexts...')
     for filename, url in link_dict.items():
-        found_ebook = Ebook.query.filter_by(plaintext_filename=filename).one()
-        found_ebook.robot_url = url
-
-        db.session.update(found_ebook)
-        db.session.commit()
+        found_ebook = Ebook.query.filter_by(plaintext_filename=filename).first()
+        if found_ebook is None:
+            # logger.debug("Can't find a match for {}".format(filename))
+            pass
+        else:
+            logger.debug('Found {}, updating...'.format(found_ebook))
+            found_ebook.robot_url = url
+            db.session.commit()
 
         # TODO handle errors
 

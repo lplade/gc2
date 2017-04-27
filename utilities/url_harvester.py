@@ -24,7 +24,7 @@ wget -w 2 -m -H "http://www.gutenberg.org/robot/harvest?filetypes[]=txt&langs[]=
 import time
 import logging
 import requests
-from urllib.parse import urlparse
+from urllib.parse import urlparse, parse_qs
 from bs4 import BeautifulSoup
 
 logging.basicConfig(level=logging.DEBUG)
@@ -38,30 +38,30 @@ BASE_PARAMS = {
 }
 
 
-class GBHarvestPage:
-    """
-    Lets us pass data derived from a harvest page request
-    """
-    offset = 0
-    link_list = []  # GBHarvestLinks
-    new_offset = None
-
-    def __init__(self, offset, link_list, new_offset):
-        self.offset = offset
-        self.link_list = link_list
-        self.new_offset = new_offset
-
-
-class GBHarvestLink:
-    """
-    Lets us pass data derived from a harvest page link
-    """
-    filename = ''
-    url = ''
-
-    def __init__(self, filename, url):
-        self.url = url
-        self.filename = filename
+# class GBHarvestPage:
+#     """
+#     Lets us pass data derived from a harvest page request
+#     """
+#     offset = 0
+#     link_list = []  # GBHarvestLinks
+#     new_offset = None
+#
+#     def __init__(self, offset, link_list, new_offset):
+#         self.offset = offset
+#         self.link_list = link_list
+#         self.new_offset = new_offset
+#
+#
+# class GBHarvestLink:
+#     """
+#     Lets us pass data derived from a harvest page link
+#     """
+#     filename = ''
+#     url = ''
+#
+#     def __init__(self, filename, url):
+#         self.url = url
+#         self.filename = filename
 
 
 def spider():
@@ -83,11 +83,11 @@ def spider():
             soup = BeautifulSoup(c, 'html.parser')
             for link in soup.find_all('a'):
                 if link.string == 'Next Page':
-
                     # Extract the offset from the 'Next Page' link
                     next_page_url = link.get('href')
-                    o = urlparse(next_page_url)
-                    new_offset = o.params('offset')  # TODO error check
+                    parsed = urlparse(next_page_url)
+                    params = parse_qs(parsed.query)
+                    new_offset = int(params['offset'][0])  # TODO error check
 
                 else:
                     ebook_url = link.get('href')
@@ -96,7 +96,7 @@ def spider():
                     ebook_filename = ebook_url.rsplit('/', 1)[-1]
 
                     # Add dict entry based on those items
-                    link_dict.update(dict([ebook_filename, ebook_url]))
+                    link_dict[ebook_filename] = ebook_url
 
         except ConnectionError:
             # TODO more graceful error handling
@@ -107,7 +107,7 @@ def spider():
         # Having parsed all the links in the page now...
         if new_offset is not None:
             offset = new_offset
-            logger.debug('Continuing to next page at offset %d', offset)
+            logger.debug('Continuing to next page at offset %d (%d links found)', offset, len(link_dict))
             continue
         else:
             logger.debug("Can't find more pages to parse")
