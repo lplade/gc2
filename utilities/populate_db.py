@@ -1,6 +1,7 @@
 import gc
-import utilities.gutenberg as gutenberg
+import utilities.gutenberg_parse as g_parse
 import utilities.url_harvester as url_harvester
+import utilities.gutenberg_url as g_url
 from gutencloud.orm import *
 
 import os
@@ -19,10 +20,10 @@ PICKLE_FILE = os.path.join(BASEDIR, 'local_data', 'robot.pickle.gz')
 
 
 def main():
-    # create_destroy_db()
-    # fetch_parse_metadata()
-    link_dict = spider_urls()
-    match_urls(link_dict)
+    create_destroy_db()
+    fetch_parse_metadata()
+    # link_dict = spider_urls()
+    # match_urls(link_dict)
 
 
 # Completely re-initialize the database
@@ -35,7 +36,7 @@ def fetch_parse_metadata():
 
     # This will take a while
     logger.info('Fetching and parsing P.G. metadata. Please be patient...')
-    metadata_catalog = gutenberg.read_metadata()
+    metadata_catalog = g_parse.read_metadata()
 
     # We get back a list of dicts
 
@@ -53,6 +54,9 @@ def fetch_parse_metadata():
                     # This constructs a new Ebook passing the dict as kwargs
                     # Python!
                     new_ebook = Ebook(**_ebook)
+
+                    # Figure out the URI for the actual etext
+                    new_ebook.url = g_url.format_download_uri(_ebook['id'])
 
                     db.session.add(new_ebook)
                     db.session.commit()
@@ -81,6 +85,10 @@ def fetch_parse_metadata():
 
 
 def spider_urls():
+    """
+    DEPRECATED: This resource links to very few of the available etexts.
+    :return: 
+    """
     # Keep a pickle in tmp so we don't have to repeat this many times
     if os.path.exists(PICKLE_FILE):
         link_dict = pickle.load(gzip.open(PICKLE_FILE, 'rb'))
@@ -93,6 +101,11 @@ def spider_urls():
 
 
 def match_urls(link_dict):
+    """
+    DEPRECATED: Only good for 618 books.
+    :param link_dict: 
+    :return: 
+    """
     logger.info('Matching robot URLs to etexts...')
     for filename, url in link_dict.items():
         found_ebook = Ebook.query.filter_by(plaintext_filename=filename).first()

@@ -1,4 +1,7 @@
 """
+
+DEPRECATED: This method takes hours and only pairs 618 etexts. :(
+
 Project Gutenberg does not offer a straightforward means to directly
 download etexts with automation. There's a big list of index pages intended
 to be spidered with wget.

@@ -72,11 +72,11 @@ The dict we pass into this looks like:
 
     # Formats is a dict
     # We only need the text/plain key
-    plaintext_url = db.Column(db.Text)
-    plaintext_filename = db.Column(db.String(191))
+    # plaintext_url = db.Column(db.Text)
+    # plaintext_filename = db.Column(db.String(191))
 
     # This is the actual url we are permitted to download from
-    robot_url = db.Column(db.Text)
+    url = db.Column(db.Text)
 
     # language is a list of ISO codes
     # We are already filtering for 'en'
@@ -114,31 +114,31 @@ The dict we pass into this looks like:
         assert type == 'Text'
         # self.lcc = LCC
 
-        self.robot_url = None  # Set after initialization
+        self.url = None  # Set after initialization
 
         # TODO store ALL of the below, and filenames
 
-        # Prefer to get UTF-8 version, fall back to ASCII if needed
-        if MIME_TXT in formats:
-            self.plaintext_url = formats[MIME_TXT]
-            self.plaintext_filename = self.plaintext_url.rsplit('/', 1)[-1]
-        elif MIME_UTF8 in formats:
-            self.plaintext_url = formats[MIME_UTF8]
-            self.plaintext_filename = self.plaintext_url.rsplit('/', 1)[-1]
-        elif MIME_ISO in formats:
-            self.plaintext_url = formats[MIME_ISO]
-            self.plaintext_filename = self.plaintext_url.rsplit('/', 1)[-1]
-        elif MIME_ASCII in formats:
-            self.plaintext_url = formats[MIME_ASCII]
-            self.plaintext_filename = self.plaintext_url.rsplit('/', 1)[-1]
-        elif MIME_ZIP in formats:
-            self.plaintext_url = formats[MIME_ZIP]
-            self.plaintext_filename = self.plaintext_url.rsplit('/', 1)[-1]
-        else:
-            # logger.debug("Can't find a plaintext version for ebook %d %s", self.ebook_id, self.title)
-            # logger.debug("Available formats: \n" + pprint.pformat(formats))
-            self.plaintext_url = None
-            self.plaintext_filename = None
+        # # Prefer to get UTF-8 version, fall back to ASCII if needed
+        # if MIME_TXT in formats:
+        #     self.plaintext_url = formats[MIME_TXT]
+        #     self.plaintext_filename = self.plaintext_url.rsplit('/', 1)[-1]
+        # elif MIME_UTF8 in formats:
+        #     self.plaintext_url = formats[MIME_UTF8]
+        #     self.plaintext_filename = self.plaintext_url.rsplit('/', 1)[-1]
+        # elif MIME_ISO in formats:
+        #     self.plaintext_url = formats[MIME_ISO]
+        #     self.plaintext_filename = self.plaintext_url.rsplit('/', 1)[-1]
+        # elif MIME_ASCII in formats:
+        #     self.plaintext_url = formats[MIME_ASCII]
+        #     self.plaintext_filename = self.plaintext_url.rsplit('/', 1)[-1]
+        # elif MIME_ZIP in formats:
+        #     self.plaintext_url = formats[MIME_ZIP]
+        #     self.plaintext_filename = self.plaintext_url.rsplit('/', 1)[-1]
+        # else:
+        #     # logger.debug("Can't find a plaintext version for ebook %d %s", self.ebook_id, self.title)
+        #     # logger.debug("Available formats: \n" + pprint.pformat(formats))
+        #     self.plaintext_url = None
+        #     self.plaintext_filename = None
 
     def __repr__(self):
         if self.author is not None:
