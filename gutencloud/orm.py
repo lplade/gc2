@@ -5,6 +5,7 @@ import pprint
 
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+from gutencloud.secrets import *
 
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
@@ -14,11 +15,12 @@ logger = logging.getLogger(__name__)
 # SQLALCHEMY_DATATBASE_URI = 'sqlite:///' + os.path.join(basedir, 'local_data', 'gutenberg.db')
 # logger.info('Database at %s', SQLALCHEMY_DATATBASE_URI)
 
-MYSQL_USER = os.environ['GC_MYSQL_USER']
-MYSQL_PASSWORD = os.environ['GC_MYSQL_PASSWORD']
 
 # Use utf8mb4 option to deal with a handful of i18n strings that show up
-SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://{}:{}@localhost/gutencloud?charset=utf8mb4'.format(MYSQL_USER, MYSQL_PASSWORD)
+# Secrets are set in secrets.py
+SQLALCHEMY_DATABASE_URI =\
+    'mysql+pymysql://{}:{}@localhost/gutencloud?charset=utf8mb4'\
+    .format(GC_MYSQL_USER, GC_MYSQL_PASSWORD)
 
 app = Flask(__name__)
 
