@@ -1,6 +1,7 @@
 # Note that the main Flask imports are in orm.py
 from .orm import *
 from flask import render_template, request, redirect
+from .fetch_etext import *
 import logging
 
 # Sets the verbosity of console logging

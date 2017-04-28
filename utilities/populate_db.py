@@ -1,13 +1,9 @@
 import gc
 import utilities.gutenberg_parse as g_parse
-import utilities.url_harvester as url_harvester
-import utilities.gutenberg_url as g_url
+# import utilities.url_harvester as url_harvester
 from gutencloud.orm import *
 
 import os
-import tempfile
-import pickle
-import gzip
 
 
 logging.basicConfig(level=logging.DEBUG)
@@ -56,7 +52,7 @@ def fetch_parse_metadata():
                     new_ebook = Ebook(**_ebook)
 
                     # Figure out the URI for the actual etext
-                    new_ebook.url = g_url.format_download_uri(_ebook['id'])
+                    # new_ebook.calculated_path = g_url.ebook_id_to_path(_ebook['id'])
 
                     db.session.add(new_ebook)
                     db.session.commit()
@@ -84,40 +80,40 @@ def fetch_parse_metadata():
     gc.collect()
 
 
-def spider_urls():
-    """
-    DEPRECATED: This resource links to very few of the available etexts.
-    :return: 
-    """
-    # Keep a pickle in tmp so we don't have to repeat this many times
-    if os.path.exists(PICKLE_FILE):
-        link_dict = pickle.load(gzip.open(PICKLE_FILE, 'rb'))
-    else:
-        # This will also take a while
-        logger.info('Spidering and indexing P.G. robot site. Please be patient...')
-        link_dict = url_harvester.spider()
-        pickle.dump(link_dict, gzip.open(PICKLE_FILE, 'wb'), protocol=-1)
-    return link_dict
-
-
-def match_urls(link_dict):
-    """
-    DEPRECATED: Only good for 618 books.
-    :param link_dict: 
-    :return: 
-    """
-    logger.info('Matching robot URLs to etexts...')
-    for filename, url in link_dict.items():
-        found_ebook = Ebook.query.filter_by(plaintext_filename=filename).first()
-        if found_ebook is None:
-            # logger.debug("Can't find a match for {}".format(filename))
-            pass
-        else:
-            logger.debug('Found {}, updating...'.format(found_ebook))
-            found_ebook.robot_url = url
-            db.session.commit()
-
-        # TODO handle errors
+# def spider_urls():
+#     """
+#     DEPRECATED: This resource links to very few of the available etexts.
+#     :return:
+#     """
+#     # Keep a pickle in tmp so we don't have to repeat this many times
+#     if os.path.exists(PICKLE_FILE):
+#         link_dict = pickle.load(gzip.open(PICKLE_FILE, 'rb'))
+#     else:
+#         # This will also take a while
+#         logger.info('Spidering and indexing P.G. robot site. Please be patient...')
+#         link_dict = url_harvester.spider()
+#         pickle.dump(link_dict, gzip.open(PICKLE_FILE, 'wb'), protocol=-1)
+#     return link_dict
+#
+#
+# def match_urls(link_dict):
+#     """
+#     DEPRECATED: Only good for 618 books.
+#     :param link_dict:
+#     :return:
+#     """
+#     logger.info('Matching robot URLs to etexts...')
+#     for filename, url in link_dict.items():
+#         found_ebook = Ebook.query.filter_by(plaintext_filename=filename).first()
+#         if found_ebook is None:
+#             # logger.debug("Can't find a match for {}".format(filename))
+#             pass
+#         else:
+#             logger.debug('Found {}, updating...'.format(found_ebook))
+#             found_ebook.robot_url = url
+#             db.session.commit()
+#
+#         # TODO handle errors
 
 
 if __name__ == "__main__":

@@ -75,9 +75,6 @@ The dict we pass into this looks like:
     # plaintext_url = db.Column(db.Text)
     # plaintext_filename = db.Column(db.String(191))
 
-    # This is the actual url we are permitted to download from
-    url = db.Column(db.Text)
-
     # language is a list of ISO codes
     # We are already filtering for 'en'
     # languages = db.Column(db.PickleType)
@@ -113,8 +110,6 @@ The dict we pass into this looks like:
         # self.type = type
         assert type == 'Text'
         # self.lcc = LCC
-
-        self.url = None  # Set after initialization
 
         # TODO store ALL of the below, and filenames
 

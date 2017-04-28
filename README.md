@@ -15,7 +15,7 @@ Requires Python 3, MySQL
     * mysql> `CREATE DATABASE gutencloud;`
     * mysql> `GRANT ALL PRIVILEGES ON gutencloud.* to '<user>'@'localhost';`
 * Run `pip install -m requirements.txt` to install required Python modules
-* Run `python3 -m utilities.populate.db` to seed the database with metadata from Project Gutenberg. This process will:
+* Run `python3 -m utilities.populate_db` to seed the database with metadata from Project Gutenberg. This process will:
     * download a 40MB datafile
     * processes that for __a while__ (53,000+ ebooks) and store it in the DB
     * spider a ton of robot-friendly web indexes (throttles to avoid ban, so again, __a while__)
