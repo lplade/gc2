@@ -2,6 +2,7 @@
 from .orm import *
 from flask import render_template, request, redirect
 from .fetch_etext import *
+from .strip_cruft import *
 import logging
 
 # Sets the verbosity of console logging
