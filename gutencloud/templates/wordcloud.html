@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Gutenberg Word Cloud{% endblock %}
+{% block content %}
+    <div class="row">
+        <div class="col-md-12">
+            <h1><small>Wordcloud for</small><br>{{ ebook.title }}</h1>
+        </div>
+        <div class="col-md-12">gi
+            <img src="data:image/png;base64,{{ data }}" alt="word cloud">
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <p>Return to <a href="/">main page</a>.</p>
+        </div>
+    </div>
+{% endblock %}
+{% block custom_js %}
+{% endblock %}
+
+

@@ -97,6 +97,7 @@ def load_etext(ebook_id, refresh_cache=False, mirror=None):
     etext = cache.get(text_key)
     if etext is None:
         # go get it
+        logger.debug('Fetching etext {}...'.format(text_key))
         download_uri = format_download_uri(ebook_id, mirror)
         if download_uri:
             sleep(2)
@@ -104,7 +105,8 @@ def load_etext(ebook_id, refresh_cache=False, mirror=None):
             etext = response.text
             # cache texts for a week
             cache.set(text_key, etext, timeout=60*60*24*7)
-        # else leave etext set to None
+        else:
+            logger.debug("No download URI!")
     else:
         logger.debug('Found etext {} in cache, using it'.format(text_key))
 

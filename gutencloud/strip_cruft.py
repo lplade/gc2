@@ -94,6 +94,7 @@ LEGALESE_START_MARKERS = frozenset(("<<THIS ELECTRONIC VERSION OF",))
 
 LEGALESE_END_MARKERS = frozenset(("SERVICE THAT CHARGES FOR DOWNLOAD",))
 
+
 def strip_headers(text):
     """
     Remove lines that are part of the PG header or footer
@@ -133,16 +134,16 @@ def strip_headers(text):
             if footer_found:
                 break
 
-            if any(line.startswith(token) for token in LEGALESE_START_MARKERS):
-                ignore_section = True
-                continue
-            elif any(line.startswith(token) for token in LEGALESE_END_MARKERS):
-                ignore_section = False
-                continue
+        if any(line.startswith(token) for token in LEGALESE_START_MARKERS):
+            ignore_section = True
+            continue
+        elif any(line.startswith(token) for token in LEGALESE_END_MARKERS):
+            ignore_section = False
+            continue
 
-            if not ignore_section:
-                out.append(line.rstrip(sep))
-                i += 1
+        if not ignore_section:
+            out.append(line.rstrip(sep))
+            i += 1
 
-            return sep.join(out)
+    return sep.join(out)
 

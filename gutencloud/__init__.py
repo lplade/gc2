@@ -2,9 +2,7 @@
 
 import os
 import logging
-#from gutencloud.fetch_etext import *
-#from gutencloud.strip_cruft import *
-from gutencloud.wordclouds import *
+import wordclouds
 from gutencloud.db_orm import *
 from flask import render_template, request, flash, redirect, url_for
 
@@ -72,6 +70,8 @@ def render_wordcloud(ebook_id):
         return render_template('notfound.html', type='e-book', query=str(ebook_id))
     else:
         etext = wordclouds.get_etext(ebook_id)
+        base64_image_data = wordclouds.make_cloud(etext)
+        return render_template('wordcloud.html', ebook=ebook, data=base64_image_data)
 
 
 
