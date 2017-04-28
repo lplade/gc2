@@ -1,9 +1,11 @@
 # Note that the main Flask imports are in orm.py
-from gutencloud.orm import *
-from flask import render_template, request, redirect
+
+import os
+import logging
 from gutencloud.fetch_etext import *
 from gutencloud.strip_cruft import *
-import logging
+from gutencloud.db_orm import *
+from flask import render_template, request, flash, redirect, url_for
 
 # How many entries to display in list of top books
 TOP_LIST = 20
@@ -15,6 +17,8 @@ logging.basicConfig(level=logging.DEBUG)
 base_dir = os.path.abspath(os.path.dirname(__file__))
 template_dir = os.path.join(base_dir, 'templates')
 static_dir = os.path.join(base_dir, 'static')
+
+logger.debug('Initialize Flask with templates at {} and static at {}'.format(template_dir, static_dir))
 
 app = Flask(__name__, template_folder=template_dir, static_folder=static_dir)
 

@@ -2,7 +2,7 @@ from gutencloud.fetch_etext import load_etext
 from gutencloud.strip_cruft import strip_headers
 from io import BytesIO
 from PIL import Image, ImageDraw
-from flask import send_file
+from __init__ import send_file
 from wordcloud import WordCloud
 
 

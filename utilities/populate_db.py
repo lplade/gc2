@@ -1,6 +1,6 @@
 # import gc
 import utilities.gutenberg_parse as g_parse
-from gutencloud.orm import *
+from gutencloud.db_orm import *
 
 import os
 
@@ -11,7 +11,7 @@ logger = logging.getLogger(__name__)
 BASEDIR = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
 PICKLE_FILE = os.path.join(BASEDIR, 'local_data', 'robot.pickle.gz')
 
-# Note that the Flask imports and database setup is in orm.py
+# Note that the Flask imports and database setup is in db_orm.py
 
 
 def main():

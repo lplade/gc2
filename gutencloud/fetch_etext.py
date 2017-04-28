@@ -5,7 +5,7 @@ import os
 from time import sleep
 
 import requests
-from gutencloud.orm import *
+from gutencloud.db_orm import *
 from werkzeug.contrib.cache import FileSystemCache
 import logging
 

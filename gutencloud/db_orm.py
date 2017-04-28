@@ -1,6 +1,6 @@
+from gutencloud.secrets import *
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-from gutencloud.secrets import *
 import logging
 
 logging.basicConfig(level=logging.DEBUG)
@@ -19,8 +19,11 @@ SQLALCHEMY_DATABASE_URI =\
     .format(GC_MYSQL_USER, GC_MYSQL_PASSWORD)
 
 app = Flask(__name__)
+# app.config['DEBUG'] = True
 app.config['SQLALCHEMY_DATABASE_URI'] = SQLALCHEMY_DATABASE_URI
-#app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False  # Squelch warnings
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False  # Squelch warnings
+
+logger.debug('Initializing ORM')
 
 db = SQLAlchemy(app)
 

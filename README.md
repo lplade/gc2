@@ -4,6 +4,8 @@ Select any text from the English-language Project Gutenberg and render it as a w
 
 Requires Python 3, MySQL 5.5.3+
 
+There seems to be a bug in Flask-SQLAlchemy 2.2, use 2.1 for now.
+
 Project Gutenberg etext handling routines based on code from Clemens Wolff's 
 [gutenberg](https://github.com/c-w/Gutenberg) module. (We don't actually depend on that module because 
 we don't want to generate 3GB of BerkelyDB store.)
