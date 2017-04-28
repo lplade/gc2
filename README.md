@@ -29,7 +29,7 @@ Change the values in `secrets.py` to database credentials (above).
 process will:
     * download a 40MB datafile
     * processes that for __a while__ (53,000+ ebooks) and store it in the DB
-* Start the app with `python3 gutencloud/__init__.py`
+* Start the app with `python3 -m gutencloud.server`
 
 ## To Do
 * Fix bugs
