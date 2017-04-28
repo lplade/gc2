@@ -9,7 +9,7 @@ from gutencloud.db_orm import *
 from werkzeug.contrib.cache import FileSystemCache
 import logging
 
-logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 # Change this if something breaks or you are banned

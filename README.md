@@ -20,12 +20,23 @@ we don't want to generate 3GB of BerkelyDB store.)
     if you don't already have this user)
     * mysql> `CREATE DATABASE gutencloud DEFAULT CHARACTER SET utf8mb4 DEFAULT COLLATE utf8mb4_unicode_ci;`
     * mysql> `GRANT ALL PRIVILEGES ON gutencloud.* to '<user>'@'localhost';`
+* Copy `gutencloud/secrets_template.py` to `gutencloud/secrets.py`. 
+Change the values in `secrets.py` to database credentials (above).
 * Run `pip install -m requirements.txt` to install required Python modules
 * Run `python3 -m utilities.populate_db` to seed the database with metadata from Project Gutenberg. This 
 process will:
     * download a 40MB datafile
     * processes that for __a while__ (53,000+ ebooks) and store it in the DB
-* Start the app with ...
+* Start the app with `python3 gutencloud/__init__.py`
+
+## To Do
+* Fix bugs
+* Write tests
+* Better UX
+    * Options for different wordcloud styles
+    * Wordcloud in image map
+* Better packaging
+* Host on web so normal people who don't admin SQL servers can use
 
 ## Lessons learned
 * Why all that hoopla about "semantic web" mysteriously died off around 2009. (XML-RDF is complicated!)

@@ -10,14 +10,14 @@ from flask import render_template, request, flash, redirect, url_for
 TOP_LIST = 20
 
 # Sets the verbosity of console logging
-logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(level=logging.INFO)
 
 # tell flask where folders are
 base_dir = os.path.abspath(os.path.dirname(__file__))
 template_dir = os.path.join(base_dir, 'templates')
 static_dir = os.path.join(base_dir, 'static')
 
-logger.debug('Initialize Flask with templates at {} and static at {}'.format(template_dir, static_dir))
+# logger.debug('Initialize Flask with templates at {} and static at {}'.format(template_dir, static_dir))
 
 app = Flask(__name__, template_folder=template_dir, static_folder=static_dir)
 

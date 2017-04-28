@@ -5,7 +5,7 @@ from gutencloud.db_orm import *
 import os
 
 
-logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 BASEDIR = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
