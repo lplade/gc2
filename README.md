@@ -2,6 +2,8 @@
 
 Select any text from the English-language Project Gutenberg and render it as a wordcloud image.
 
+![wordcloud for Moby Dick](screenshots/screenshot-1.png)
+
 Requires Python 3, MySQL 5.5.3+
 
 There seems to be a bug in Flask-SQLAlchemy 2.2, use 2.1 for now.
