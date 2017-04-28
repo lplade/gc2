@@ -2,8 +2,9 @@
 
 import os
 import logging
-from gutencloud.fetch_etext import *
-from gutencloud.strip_cruft import *
+#from gutencloud.fetch_etext import *
+#from gutencloud.strip_cruft import *
+from gutencloud.wordclouds import *
 from gutencloud.db_orm import *
 from flask import render_template, request, flash, redirect, url_for
 
@@ -37,11 +38,10 @@ def index():
 @app.route('/search_author', methods=["POST"])
 def search_author():
     if request.method == "POST":
-        result_list = Ebook.query.filter(Ebook.author.like('\%{}\%'.format(
-            request.form['author_query']
-        )))
-        if result_list is None:
-            return render_template('notfound.html', type='author', query=request.form['author_query'])
+        query = request.form['author_query']
+        result_list = Ebook.query.filter(Ebook.author.like('%{}%'.format(query))).all()
+        if result_list is None or len(result_list) == 0:
+            return render_template('notfound.html', type='author', query=query)
         else:
             return render_template('author_results.html', authors=result_list)
     else:
@@ -52,11 +52,11 @@ def search_author():
 @app.route('/search_title', methods=["POST"])
 def search_title():
     if request.method == "POST":
-        result_list = Ebook.query.filter(Ebook.title.like('\%{}\%'.format(
-            request.form['title_query']
-        )))
-        if result_list is None:
-            return render_template('notfound.html', type='author', query=request.form['title_query'])
+        query = request.form['title_query']
+        result_list = Ebook.query.filter(Ebook.title.like('%{}%'.format(query))).all()
+        logger.debug(result_list)
+        if result_list is None or len(result_list) == 0:
+            return render_template('notfound.html', type='title', query=query)
         else:
             return render_template('title_results.html', titles=result_list)
     else:
@@ -71,8 +71,9 @@ def render_wordcloud(ebook_id):
     if ebook is None:
         return render_template('notfound.html', type='e-book', query=str(ebook_id))
     else:
-        # TODO heart of the application. Grab the etext from PG, render a wordcloud
-        pass
+        etext = wordclouds.get_etext(ebook_id)
+
+
 
 
 # Leave this as the last route

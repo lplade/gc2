@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}Gutenberg Word Cloud{% endblock %}
+{% block content %}
+    <div class="row">
+        <div class="col-md-12">
+            <h1>Title search results</h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <tr>
+                        <th>Title</th>
+                        <th>Author</th>
+                        <th></th>
+                    </tr>
+                    {% for ebook in titles %}
+                        <tr>
+                            <td>{{ ebook.title }}</td>
+                            <td>
+                                {{ ebook.author }}
+                                {% if ebook.author_year_of_birth %}
+                                    (
+                                    {{ ebook.author_year_of_birth }}&ndash;{% if ebook.author_year_of_death %}{{ ebook.author_year_of_death }}{% else %}&nbsp;{% endif %}
+                                    )
+                                {% endif %}
+                            </td>
+
+                            <td><a href="/wordcloud/{{ ebook.ebook_id }}">Generate wordcloud!</a></td>
+                        </tr>
+                    {% else %}
+                        <tr class="warning">
+                            <td colspan="2">No results, but you should never see this.</td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block custom_js %}
+{% endblock %}
