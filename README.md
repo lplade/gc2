@@ -18,5 +18,3 @@ Requires Python 3, MySQL
 * Run `python3 -m utilities.populate_db` to seed the database with metadata from Project Gutenberg. This process will:
     * download a 40MB datafile
     * processes that for __a while__ (53,000+ ebooks) and store it in the DB
-    * spider a ton of robot-friendly web indexes (throttles to avoid ban, so again, __a while__)
-    * further process those and update the DB (takes several hours!)
