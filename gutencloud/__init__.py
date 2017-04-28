@@ -22,12 +22,14 @@ app = Flask(__name__, template_folder=template_dir, static_folder=static_dir)
 
 @app.route('/', methods=["GET"])
 def index():
+
     return render_template("main.html")
 
 
 @app.route('/pgsearch', methods=["POST"])
 def pg_search():
     if request.method == "POST":
+
         # TODO parse the form
         # TODO do some stuff with that
         # TODO process output from that
