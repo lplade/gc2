@@ -8,11 +8,51 @@
     </div>
     <div class="row">
         <div class="col-md-12">
-            <form class="form" action="/pgsearch" method="post">
+            <h2>Search</h2>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <form class="form" action="/search_author" method="post">
                 <div class="form-group">
-                    <!-- TODO some kind of search form -->
+                    <label for="authorSearch">Search by author</label>
+                    <input type="text" class="form-control" id="authorSearch"
+                        name="author_query" placeholder="tolstoy" required>
                 </div>
+                <button type="submit" class="btn btn-default">Search</button>
             </form>
+            <form class="form" action="/search_title" method="post">
+                <div class="form-group">
+                    <label for="titleSearch">Search by author</label>
+                    <input type="text" class="form-control" id="titleSearch"
+                        name="title_query" placeholder="war and peace" required>
+                </div>
+                <button type="submit" class="btn btn-default">Search</button>
+            </form>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <h2>Popular titles</h2>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <tr>
+                        <th>Title</th>
+                        <th>Author</th>
+                        <th></th>
+                    </tr>
+                    {% for ebook in top_books %}
+                        <tr>
+                            <td>{{ ebook.title }}</td>
+                            <td>{{ ebook.author }}</td>
+                            <td><a href="/wordcloud/{{ ebook.ebook_id }}">Generate wordcloud!</a></td>
+                        </tr>
+                </table>
+            </div>
         </div>
     </div>
 {% endblock %}

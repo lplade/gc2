@@ -24,3 +24,9 @@ process will:
     * download a 40MB datafile
     * processes that for __a while__ (53,000+ ebooks) and store it in the DB
 * Start the app with ...
+
+## Lessons learned
+* Why all that hoopla about "semantic web" mysteriously died off around 2009. (XML-RDF is complicated!)
+* MySQL's default version of UTF-8 is limited to 3 bytes, unlike Python (and most other implementations) 
+which support a full 4 bytes. Have to override default to get "real" UTF-8 in MySQL.
+* For a site that serves the public domain, Project Gutenberg is weirdly unfriendly to programmers.

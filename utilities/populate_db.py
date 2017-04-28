@@ -1,4 +1,4 @@
-import gc
+# import gc
 import utilities.gutenberg_parse as g_parse
 from gutencloud.orm import *
 
@@ -74,9 +74,9 @@ def fetch_parse_metadata():
     logger.info('Metadata stored in database')
     logger.info('Created {} records. Continuing...'.format(ebook_records))
 
-    # Get that ginormous list out of memory before proceeding
-    del metadata_catalog
-    gc.collect()
+    # # Get that ginormous list out of memory before proceeding
+    # del metadata_catalog
+    # gc.collect()
 
 if __name__ == "__main__":
     main()

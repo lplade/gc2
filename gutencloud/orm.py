@@ -1,12 +1,7 @@
-# -*- coding: utf-8 -*-
-import os
-
-import logging
-import pprint
-
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from gutencloud.secrets import *
+import logging
 
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
@@ -24,16 +19,16 @@ SQLALCHEMY_DATABASE_URI =\
     .format(GC_MYSQL_USER, GC_MYSQL_PASSWORD)
 
 app = Flask(__name__)
-
 app.config['SQLALCHEMY_DATABASE_URI'] = SQLALCHEMY_DATABASE_URI
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False  # Squelch warnings
+#app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False  # Squelch warnings
+
 db = SQLAlchemy(app)
 
-MIME_TXT = 'text/plain'
-MIME_UTF8 = 'text/plain; charset=utf-8'
-MIME_ISO = 'text/plain; charset=iso-8859-1'
-MIME_ASCII = 'text/plain; charset=us-ascii'
-MIME_ZIP = 'application/zip'
+# MIME_TXT = 'text/plain'
+# MIME_UTF8 = 'text/plain; charset=utf-8'
+# MIME_ISO = 'text/plain; charset=iso-8859-1'
+# MIME_ASCII = 'text/plain; charset=us-ascii'
+# MIME_ZIP = 'application/zip'
 
 
 class Ebook(db.Model):
